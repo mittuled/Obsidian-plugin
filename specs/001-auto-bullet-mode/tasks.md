@@ -23,11 +23,11 @@
 
 **Purpose**: Project initialization, build tooling, and Obsidian plugin scaffold
 
-- [ ] T001 Initialize npm project with `obsidian`, `typescript`, `@types/node`, `esbuild` dependencies in package.json
-- [ ] T002 [P] Create tsconfig.json with strict mode, ES2018 target, CommonJS module resolution, and `obsidian` type imports
-- [ ] T003 [P] Create esbuild.config.mjs with external `obsidian` module, CommonJS format, single `main.js` output, and dev watch mode
-- [ ] T004 [P] Create manifest.json with id `auto-bullet-mode`, name `Auto Bullet Mode`, version `1.0.0`, minAppVersion, `isDesktopOnly: false`
-- [ ] T005 Create directory structure: `src/`, `src/extensions/`, `tests/unit/`
+- [x] T001 Initialize npm project with `obsidian`, `typescript`, `@types/node`, `esbuild` dependencies in package.json
+- [x] T002 [P] Create tsconfig.json with strict mode, ES2018 target, CommonJS module resolution, and `obsidian` type imports
+- [x] T003 [P] Create esbuild.config.mjs with external `obsidian` module, CommonJS format, single `main.js` output, and dev watch mode
+- [x] T004 [P] Create manifest.json with id `auto-bullet-mode`, name `Auto Bullet Mode`, version `1.0.0`, minAppVersion, `isDesktopOnly: false`
+- [x] T005 Create directory structure: `src/`, `src/extensions/`, `tests/unit/`
 
 **Checkpoint**: Project builds with `npm run build` producing an empty `main.js`
 
@@ -41,11 +41,11 @@
 
 > **NOTE: Write tests FIRST (TDD per constitution Principle VI), then implement**
 
-- [ ] T006 [P] Write unit tests for settings defaults in tests/unit/settings.test.ts: test `Object.assign({}, DEFAULT_SETTINGS, null)` produces defaults, test merging partial saved data preserves missing fields
-- [ ] T007 [P] Write unit tests for context detection in tests/unit/context.test.ts: test `isInCodeBlock` returns true inside FencedCode/CodeBlock nodes, `isInFrontmatter` returns true inside YAMLFrontMatter, `isLivePreview` reads `editorLivePreviewField`
-- [ ] T008 Create AutoBulletSettings interface and DEFAULT_SETTINGS constant (`{ autoBulletEnabled: true }`) in src/settings.ts (depends on T006 failing first)
-- [ ] T009 Implement context detection helpers in src/extensions/context.ts: `isInCodeBlock(state, pos)`, `isInFrontmatter(state, pos)`, `isLivePreview(state)` using `syntaxTree().resolveInner()` and `editorLivePreviewField` (depends on T007 failing first)
-- [ ] T010 Create plugin skeleton in src/main.ts: extend `Plugin`, implement `onload()` with `loadData()`/settings merge, implement `onunload()`, create mutable extension array with `registerEditorExtension()`
+- [x] T006 [P] Write unit tests for settings defaults in tests/unit/settings.test.ts: test `Object.assign({}, DEFAULT_SETTINGS, null)` produces defaults, test merging partial saved data preserves missing fields
+- [x] T007 [P] Write unit tests for context detection in tests/unit/context.test.ts: test `isInCodeBlock` returns true inside FencedCode/CodeBlock nodes, `isInFrontmatter` returns true inside YAMLFrontMatter, `isLivePreview` reads `editorLivePreviewField`
+- [x] T008 Create AutoBulletSettings interface and DEFAULT_SETTINGS constant (`{ autoBulletEnabled: true }`) in src/settings.ts (depends on T006 failing first)
+- [x] T009 Implement context detection helpers in src/extensions/context.ts: `isInCodeBlock(state, pos)`, `isInFrontmatter(state, pos)`, `isLivePreview(state)` using `syntaxTree().resolveInner()` and `editorLivePreviewField` (depends on T007 failing first)
+- [x] T010 Create plugin skeleton in src/main.ts: extend `Plugin`, implement `onload()` with `loadData()`/settings merge, implement `onunload()`, create mutable extension array with `registerEditorExtension()`
 
 **Checkpoint**: Foundation ready — plugin loads in Obsidian with no behavior, settings load/save works, context helpers tested
 
@@ -61,15 +61,15 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T011 [P] [US1] Write unit tests for auto-bullet inputHandler in tests/unit/auto-bullet.test.ts: test single character on empty line triggers `- ` prefix insertion, test paste (text.length > 1) does NOT trigger insertion, test no insertion when `isInCodeBlock` is true, test no insertion when `isInFrontmatter` is true, test no insertion when `isLivePreview` is false, test no insertion when line already has `- ` prefix
-- [ ] T012 [P] [US1] Write unit tests for bullet-enter keymap in tests/unit/bullet-enter.test.ts: test Enter on bullet line creates new `- ` line, test Enter on empty bullet `- ` removes bullet and creates empty line, test Enter does not fire when not in Live Preview, test Enter does not fire inside code block
-- [ ] T013 [P] [US1] Write unit test for no-modify-on-open in tests/unit/auto-bullet.test.ts: test that opening a note with plain text lines does NOT trigger any editor transactions or bullet insertions (FR-004)
+- [x] T011 [P] [US1] Write unit tests for auto-bullet inputHandler in tests/unit/auto-bullet.test.ts: test single character on empty line triggers `- ` prefix insertion, test paste (text.length > 1) does NOT trigger insertion, test no insertion when `isInCodeBlock` is true, test no insertion when `isInFrontmatter` is true, test no insertion when `isLivePreview` is false, test no insertion when line already has `- ` prefix
+- [x] T012 [P] [US1] Write unit tests for bullet-enter keymap in tests/unit/bullet-enter.test.ts: test Enter on bullet line creates new `- ` line, test Enter on empty bullet `- ` removes bullet and creates empty line, test Enter does not fire when not in Live Preview, test Enter does not fire inside code block
+- [x] T013 [P] [US1] Write unit test for no-modify-on-open in tests/unit/auto-bullet.test.ts: test that opening a note with plain text lines does NOT trigger any editor transactions or bullet insertions (FR-004)
 
 ### Implementation for User Story 1
 
-- [ ] T014 [US1] Implement auto-bullet inputHandler extension in src/extensions/auto-bullet.ts: use `EditorView.inputHandler.of()` to detect single-character input on empty lines, guard with `isLivePreview()`, `isInCodeBlock()`, `isInFrontmatter()`, insert `- ` prefix via `view.dispatch()`, handle block-level syntax override (remove `- ` if user types `#`, `>`, or number prefix)
-- [ ] T015 [US1] Implement bullet-enter keymap extension in src/extensions/bullet-enter.ts: use `Prec.high(keymap.of([{ key: 'Enter', run }]))`, detect current line bullet prefix with regex `^\s*[-]\s` (only `- ` supported per spec assumptions), insert `\n` + matching indent + `- `, handle empty bullet case (remove `- ` line, insert plain newline)
-- [ ] T016 [US1] Wire auto-bullet and bullet-enter extensions into src/main.ts: push both extensions into the mutable extension array, call `this.app.workspace.updateOptions()`, guard with `autoBulletEnabled` setting check
+- [x] T014 [US1] Implement auto-bullet inputHandler extension in src/extensions/auto-bullet.ts: use `EditorView.inputHandler.of()` to detect single-character input on empty lines, guard with `isLivePreview()`, `isInCodeBlock()`, `isInFrontmatter()`, insert `- ` prefix via `view.dispatch()`, handle block-level syntax override (remove `- ` if user types `#`, `>`, or number prefix)
+- [x] T015 [US1] Implement bullet-enter keymap extension in src/extensions/bullet-enter.ts: use `Prec.high(keymap.of([{ key: 'Enter', run }]))`, detect current line bullet prefix with regex `^\s*[-]\s` (only `- ` supported per spec assumptions), insert `\n` + matching indent + `- `, handle empty bullet case (remove `- ` line, insert plain newline)
+- [x] T016 [US1] Wire auto-bullet and bullet-enter extensions into src/main.ts: push both extensions into the mutable extension array, call `this.app.workspace.updateOptions()`, guard with `autoBulletEnabled` setting check
 
 **Checkpoint**: User Story 1 fully functional — auto-bullet and Enter continuation work in Live Preview, excluded in code blocks/frontmatter/Source mode
 
@@ -83,15 +83,15 @@
 
 ### Tests for User Story 2
 
-- [ ] T017 [P] [US2] Write unit tests for toggle behavior in tests/unit/toggle.test.ts: test toggling `autoBulletEnabled` to false removes extensions from array, test toggling back to true re-adds extensions, test `saveData()` is called on toggle
-- [ ] T018 [P] [US2] Write unit tests for status bar in tests/unit/status-bar.test.ts: test status bar text updates when mode is enabled vs disabled, test status bar click handler toggles mode
+- [x] T017 [P] [US2] Write unit tests for toggle behavior in tests/unit/toggle.test.ts: test toggling `autoBulletEnabled` to false removes extensions from array, test toggling back to true re-adds extensions, test `saveData()` is called on toggle
+- [x] T018 [P] [US2] Write unit tests for status bar in tests/unit/status-bar.test.ts: test status bar text updates when mode is enabled vs disabled, test status bar click handler toggles mode
 
 ### Implementation for User Story 2
 
-- [ ] T019 [US2] Implement status bar manager in src/status-bar.ts: create `StatusBarManager` class, `addStatusBarItem()` in constructor with platform guard (desktop only), `update(enabled: boolean)` method to set text/icon, click handler to toggle mode
-- [ ] T020 [US2] Register toggle command in src/main.ts via `addCommand()`: id `toggle-auto-bullet-mode`, name `Toggle Auto Bullet Mode`, callback flips `autoBulletEnabled`, calls `saveData()`, updates extension array (push/clear), calls `workspace.updateOptions()`, updates status bar
-- [ ] T021 [US2] Implement PluginSettingTab in src/settings.ts: extend `PluginSettingTab`, add toggle control for `autoBulletEnabled`, call `saveData()` and update extensions on change
-- [ ] T022 [US2] Initialize status bar and settings tab in src/main.ts `onload()`: instantiate `StatusBarManager`, call `addSettingTab()`, set initial status bar state from loaded settings
+- [x] T019 [US2] Implement status bar manager in src/status-bar.ts: create `StatusBarManager` class, `addStatusBarItem()` in constructor with platform guard (desktop only), `update(enabled: boolean)` method to set text/icon, click handler to toggle mode
+- [x] T020 [US2] Register toggle command in src/main.ts via `addCommand()`: id `toggle-auto-bullet-mode`, name `Toggle Auto Bullet Mode`, callback flips `autoBulletEnabled`, calls `saveData()`, updates extension array (push/clear), calls `workspace.updateOptions()`, updates status bar
+- [x] T021 [US2] Implement PluginSettingTab in src/settings.ts: extend `PluginSettingTab`, add toggle control for `autoBulletEnabled`, call `saveData()` and update extensions on change
+- [x] T022 [US2] Initialize status bar and settings tab in src/main.ts `onload()`: instantiate `StatusBarManager`, call `addSettingTab()`, set initial status bar state from loaded settings
 
 **Checkpoint**: Toggle works via command palette and settings tab. Status bar reflects state on desktop. Extensions dynamically added/removed.
 
@@ -105,12 +105,12 @@
 
 ### Tests for User Story 3
 
-- [ ] T023 [P] [US3] Write unit tests for indentation-aware Enter in tests/unit/indent-enter.test.ts: test Enter on indented bullet `\t- text` creates `\t- ` on new line, test Enter on double-indented bullet `\t\t- text` creates `\t\t- ` on new line, test Enter on empty indented bullet `\t- ` removes bullet and outdents
+- [x] T023 [P] [US3] Write unit tests for indentation-aware Enter in tests/unit/indent-enter.test.ts: test Enter on indented bullet `\t- text` creates `\t- ` on new line, test Enter on double-indented bullet `\t\t- text` creates `\t\t- ` on new line, test Enter on empty indented bullet `\t- ` removes bullet and outdents
 
 ### Implementation for User Story 3
 
-- [ ] T024 [US3] Update bullet-enter keymap in src/extensions/bullet-enter.ts to capture leading whitespace from current line regex match group and include it in the new bullet prefix (`\n${indent}- `)
-- [ ] T025 [US3] Update auto-bullet inputHandler in src/extensions/auto-bullet.ts to detect indented context: if previous line is an indented bullet, auto-insert at matching indent level
+- [x] T024 [US3] Update bullet-enter keymap in src/extensions/bullet-enter.ts to capture leading whitespace from current line regex match group and include it in the new bullet prefix (`\n${indent}- `)
+- [x] T025 [US3] Update auto-bullet inputHandler in src/extensions/auto-bullet.ts to detect indented context: if previous line is an indented bullet, auto-insert at matching indent level
 
 **Checkpoint**: Indented bullet continuation works. Tab/Shift-Tab use Obsidian native behavior. Nested outlines function correctly.
 
@@ -120,10 +120,10 @@
 
 **Purpose**: Styles, documentation, final validation
 
-- [ ] T026 [P] Create styles.css with status bar indicator styles using CSS logical properties and Obsidian CSS custom properties
-- [ ] T027 [P] Run quickstart.md validation: verify all setup steps, verify all test exclusions (code blocks, frontmatter, headings, paste, Source mode)
-- [ ] T028 Verify all tests pass with `npm test`
-- [ ] T029 Manual smoke test on Obsidian mobile (if available) to confirm auto-bullet works without status bar
+- [x] T026 [P] Create styles.css with status bar indicator styles using CSS logical properties and Obsidian CSS custom properties
+- [x] T027 [P] Run quickstart.md validation: verify all setup steps, verify all test exclusions (code blocks, frontmatter, headings, paste, Source mode)
+- [x] T028 Verify all tests pass with `npm test`
+- [x] T029 Manual smoke test on Obsidian mobile (if available) to confirm auto-bullet works without status bar
 
 ---
 

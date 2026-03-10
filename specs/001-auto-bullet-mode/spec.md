@@ -79,19 +79,21 @@ As a user working in outline mode, I can use Tab and Shift+Tab to indent and out
 ### Functional Requirements
 
 - **FR-001**: The plugin MUST automatically insert a bullet prefix ("- ") when the user begins typing on a new empty line while auto-bullet mode is enabled.
-- **FR-002**: The plugin MUST create a new bullet line when the user presses Enter at the end of an existing bullet line.
-- **FR-003**: The plugin MUST remove an empty bullet and exit bullet mode when the user presses Enter on a line containing only "- " (matching standard Obsidian list behavior).
+- **FR-002**: The plugin MUST create a new bullet line when the user presses Enter on an existing bullet line. If the cursor is in the middle of the line, the text after the cursor MUST be moved to the new bullet line (standard line-split behavior with bullet prefix on the new line).
+- **FR-003**: The plugin MUST remove an empty bullet and exit the current bullet list when the user presses Enter on a line containing only "- " (matching standard Obsidian list behavior). After exiting, the next character typed on an empty line MUST re-enter auto-bullet mode (insert "- " prefix) — the exit is per-line, not a mode toggle.
 - **FR-004**: The plugin MUST NOT modify existing note content when a note is opened. Auto-bullet applies only to new lines the user actively creates.
 - **FR-005**: The plugin MUST provide a toggle command accessible via the command palette to enable/disable auto-bullet mode.
 - **FR-006**: The plugin MUST persist the user's toggle preference across sessions.
-- **FR-007**: The plugin MUST NOT insert bullet prefixes inside code blocks (fenced or indented), frontmatter, or other non-prose contexts.
+- **FR-007**: The plugin MUST NOT insert bullet prefixes inside non-prose contexts. The exhaustive list of excluded contexts is: fenced code blocks (`` ``` ``), indented code blocks, YAML frontmatter (`---`), callout blocks (`> [!type]`), comments (`%% ... %%`), table rows (pipe `|` syntax), and embedded/transclusion blocks (`![[note]]`).
 - **FR-008**: The plugin MUST NOT insert bullet prefixes when the user starts a line with a heading marker (`#`), numbered list marker (`1.`), blockquote (`>`), or other Markdown block-level syntax.
 - **FR-009**: The plugin MUST NOT modify pasted content. Only user-typed new lines receive bullet prefixes.
 - **FR-010**: The plugin MUST preserve existing indentation levels when creating new bullet lines after indented bullets.
 - **FR-011**: The plugin MUST display a visual indicator (status bar on desktop) showing whether auto-bullet mode is currently active.
 - **FR-012**: The plugin MUST default to auto-bullet mode being enabled on first install.
 - **FR-013**: The plugin MUST work on both desktop and mobile Obsidian (`isDesktopOnly: false`). The status bar indicator is a desktop-only enhancement.
-- **FR-014**: The plugin MUST operate in Live Preview editing mode. Source mode is out of scope for v1.
+- **FR-014**: The plugin MUST operate in Live Preview editing mode only. In Source mode, the plugin MUST silently do nothing (extensions check `editorLivePreviewField` dynamically). Reading View has no editor, so the plugin has no effect. When the user switches between Live Preview and Source mode mid-session, the plugin MUST respond immediately — activating or deactivating based on the new mode.
+- **FR-015**: Multi-cursor editing is a known limitation for v1. The plugin's auto-bullet behavior with multiple simultaneous cursors is undefined and not guaranteed.
+- **FR-016**: IME (Input Method Editor) composition for CJK languages MUST be supported. The `inputHandler` fires after composition ends, so auto-bullet insertion occurs after the composed character is committed.
 
 ### Key Entities
 
@@ -110,7 +112,7 @@ As a user working in outline mode, I can use Tab and Shift+Tab to indent and out
 ### Measurable Outcomes
 
 - **SC-001**: Users can create bulleted notes without ever manually typing "- " — 100% of new lines in auto-bullet mode start with a bullet prefix automatically.
-- **SC-002**: Toggling auto-bullet mode on/off takes fewer than 2 seconds via the command palette.
+- **SC-002**: Toggling auto-bullet mode on/off takes fewer than 2 seconds from command invocation to visual feedback (status bar update on desktop, behavior change on next keystroke).
 - **SC-003**: The plugin does not alter any existing note content upon opening — zero unintended modifications to stored notes.
 - **SC-004**: Special contexts (code blocks, frontmatter, headings) are correctly detected and excluded from auto-bullet behavior 100% of the time.
-- **SC-005**: The plugin adds no perceptible delay to typing. Keystroke-to-character latency remains indistinguishable from vanilla Obsidian.
+- **SC-005**: The plugin adds no perceptible delay to typing. Keystroke-to-character latency MUST remain under 16ms (one frame at 60fps), indistinguishable from vanilla Obsidian.

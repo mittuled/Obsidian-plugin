@@ -3,7 +3,7 @@
   "name": "Auto Bullet Mode",
   "version": "1.0.0",
   "minAppVersion": "1.5.0",
-  "description": "Automatically inserts bullet prefixes on new lines for an always-on outliner experience",
+  "description": "Automatically inserts bullet prefixes on new lines for an always-on outliner experience.",
   "author": "mittuled",
   "authorUrl": "https://github.com/mittuled",
   "isDesktopOnly": false

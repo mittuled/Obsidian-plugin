@@ -50,8 +50,7 @@ var AutoBulletSettingTab = class extends import_obsidian.PluginSettingTab {
   display() {
     const { containerEl } = this;
     containerEl.empty();
-    new import_obsidian.Setting(containerEl).setName("Auto bullet mode").setHeading();
-    new import_obsidian.Setting(containerEl).setName("Enable auto bullet mode").setDesc("Automatically insert bullet prefixes on new lines").addToggle(
+    new import_obsidian.Setting(containerEl).setName("Enable auto bullet mode").setHeading().setDesc("Automatically insert bullet prefixes on new lines").addToggle(
       (toggle) => toggle.setValue(this.plugin.settings.autoBulletEnabled).onChange(async (value) => {
         this.plugin.settings.autoBulletEnabled = value;
         await this.plugin.saveSettings();

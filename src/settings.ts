@@ -33,11 +33,8 @@ export class AutoBulletSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
     new Setting(containerEl)
-      .setName("Auto bullet mode")
-      .setHeading();
-
-    new Setting(containerEl)
       .setName("Enable auto bullet mode")
+      .setHeading()
       .setDesc("Automatically insert bullet prefixes on new lines")
       .addToggle((toggle) =>
         toggle
